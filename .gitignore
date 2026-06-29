@@ -1,0 +1,27 @@
+﻿# --- Env / Secrets ---
+.env
+.env.*
+!.env.example
+
+# --- Python ---
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# --- Node ---
+node_modules/
+dist/
+build/
+.vite/
+
+# --- IDE / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- Docker ---
+*.log
