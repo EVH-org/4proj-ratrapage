@@ -46,7 +46,7 @@ function CardItem({ r, flip }) {
             />
           )}
           <Tag
-            variant={pub ? 'primary' : 'muted'}
+            variant={pub ? 'secondary' : 'muted'}
             style={{ position: 'absolute', top: '8px', right: '8px' }}
           >
             {pub ? 'Public' : 'Privé'}

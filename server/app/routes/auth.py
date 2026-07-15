@@ -1,0 +1,34 @@
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+
+from app.crud.user import create_user, get_user_by_email
+from app.db.session import get_db
+from app.schemas.auth import LoginRequest, TokenResponse
+from app.schemas.user import UserCreate
+from app.security import create_access_token
+
+router = APIRouter(prefix="/auth", tags=["auth"])
+
+
+@router.post(
+    "/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED
+)
+def register(body: UserCreate, db: Session = Depends(get_db)):
+    existing = get_user_by_email(db, body.email)
+    if existing:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email déjà utilisé")
+    user = create_user(db, body)
+    token = create_access_token(str(user.id))
+    return TokenResponse(access_token=token, user_id=str(user.id))
+
+
+@router.post("/login", response_model=TokenResponse)
+def login(body: LoginRequest, db: Session = Depends(get_db)):
+    user = get_user_by_email(db, body.email)
+    if not user or user.password_hash != body.password:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Identifiants invalides",
+        )
+    token = create_access_token(str(user.id))
+    return TokenResponse(access_token=token, user_id=str(user.id))

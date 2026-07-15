@@ -46,7 +46,7 @@ export default function CookbooksPage() {
         <header style={{ marginBottom: '32px' }}>
           <h1 style={{ color: 'var(--color-text-primary)', marginBottom: '8px' }}>Mes Cookbooks</h1>
           <p style={{ color: 'var(--color-text-muted)' }}>
-            Retrouvez tous vos carnets de recettes partages ou personnels.
+            Retrouvez tous vos carnets de recettes partagés ou personnels.
           </p>
           <div style={{ marginTop: '16px', display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link to="/cookbooks/new">
@@ -95,7 +95,7 @@ export default function CookbooksPage() {
         {!loading && !error && filteredCookbooks.length === 0 && (
           <Card style={{ padding: '48px', maxWidth: '800px', margin: '0 auto' }}>
             <p style={{ color: 'var(--color-text-muted)' }}>
-              Aucun cookbook trouve. Creez-en un pour commencer !
+              Aucun cookbook trouvé. Créez-en un pour commencer !
             </p>
           </Card>
         )}
@@ -125,8 +125,8 @@ export default function CookbooksPage() {
                   </p>
                 )}
                 <div style={{ marginTop: '12px' }}>
-                  <Tag variant={cb.visibility === 'public' ? 'primary' : 'secondary'} style={{ marginRight: '8px' }}>
-                    {cb.visibility === 'public' ? 'Public' : 'Prive'}
+                  <Tag variant={cb.visibility === 'public' ? 'secondary' : 'muted'} style={{ marginRight: '8px' }}>
+                    {cb.visibility === 'public' ? 'Public' : 'Privé'}
                   </Tag>
                 </div>
                 <Link to={`/cookbooks/${cb.id}`} style={{ position: 'absolute', top: '16px', right: '16px' }}>

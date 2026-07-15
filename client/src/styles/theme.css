@@ -1,0 +1,72 @@
+:root {
+  --color-primary: #e23e2a;
+  --color-primary-hover: #bf2b1a;
+  --color-primary-active: #961d0f;
+  --color-primary-light: #ffeceb;
+
+  --color-accent-warm: #e69112;
+  --color-accent-warm-hover: #c87a0b;
+  --color-accent-warm-light: #fef4db;
+  --color-accent-fresh: #2a804e;
+  --color-accent-fresh-hover: #1f613a;
+  --color-accent-fresh-light: #e6f4ea;
+
+  --color-bg-page: #faf9f6;
+  --color-bg-surface: #ffffff;
+  --color-bg-disabled: #eae8e5;
+  
+  --color-text-primary: #231f1f;
+  --color-text-muted: #5c5555;
+  --color-text-disabled: #a6a19c;
+  --color-text-inverse: #ffffff;
+
+  --color-border-subtle: #eae5df;
+  --color-border-hover: #c8bfae;
+  --color-border-focus: #3b82f6;
+  --color-border-error: #d32f2f;
+  --color-error-bg: #fdf2f2;
+
+  --font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+
+  /* sizes */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 2.25rem;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 0.75rem;
+  --space-lg: 1rem;
+  --space-xl: 1.5rem;
+  --space-2xl: 2rem;
+  --space-3xl: 3rem;
+
+  --container-max-width: 1200px;
+
+  --shadow-sm: 0 1px 2px 0 rgba(35, 31, 31, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(35, 31, 31, 0.08), 0 2px 4px -1px rgba(35, 31, 31, 0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(35, 31, 31, 0.1), 0 4px 6px -2px rgba(35, 31, 31, 0.05);
+  --shadow-outline: 0 0 0 3px rgba(59, 130, 246, 0.5);
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  --transition-fast: 0.15s ease-in-out;
+  --transition-normal: 0.25s ease-in-out;
+}

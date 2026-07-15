@@ -135,7 +135,7 @@ export default function CookbookDetailPage() {
       });
 
       setInvitations((prev) => [...prev, inv]);
-      setInviteSt({ err: '', ok: `Invitation creee ! Token: ${inv.token}`, busy: false });
+      setInviteSt({ err: '', ok: `Invitation créée ! Token: ${inv.token}`, busy: false });
       setShowInviteForm(false);
     } catch (e) {
       setInviteSt({ err: e.message || 'Erreur lors de la creation de l\'invitation', ok: '', busy: false });
@@ -183,8 +183,8 @@ export default function CookbookDetailPage() {
                   whiteSpace: 'nowrap',
                 }}>{cookbook.description}</p>
               )}
-              <Tag variant={cookbook.visibility === 'public' ? 'primary' : 'secondary'}>
-                {cookbook.visibility === 'public' ? 'Public' : 'Prive'}
+              <Tag variant={cookbook.visibility === 'public' ? 'secondary' : 'muted'}>
+                {cookbook.visibility === 'public' ? 'Public' : 'Privé'}
               </Tag>
               {isOwner && (
                 <div style={{ marginTop: '8px', display: 'flex', gap: '8px' }}>
@@ -222,7 +222,7 @@ export default function CookbookDetailPage() {
                   onChange={(e) => setEditDescription(e.target.value)} disabled={saving} rows={3} style={{ resize: 'vertical' }} />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                <label className="ui-form-label">Visibilite</label>
+                <label className="ui-form-label">Visibilité</label>
                 <select className="ui-form-input" value={editVisibility}
                   onChange={(e) => setEditVisibility(e.target.value)} disabled={saving} style={{ cursor: 'pointer' }}>
                   <option value="private">Prive</option>
@@ -329,7 +329,7 @@ export default function CookbookDetailPage() {
                     gap: '12px',
                   }}
                 >
-                  <h4 style={{ margin: 0, color: 'var(--color-text-primary)' }}>Creer une invitation</h4>
+                  <h4 style={{ margin: 0, color: 'var(--color-text-primary)' }}>Créer une invitation</h4>
 
                   <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'flex-end' }}>
                     <div style={{ flex: '1 1 200px', minWidth: '140px' }}>
@@ -357,7 +357,7 @@ export default function CookbookDetailPage() {
                       </select>
                     </div>
                     <Button type="submit" variant="primary" disabled={inviteSt.busy} style={{ alignSelf: 'flex-end' }}>
-                      {inviteSt.busy ? 'Creation...' : 'Creer le lien'}
+                      {inviteSt.busy ? 'Création...' : 'Créer le lien'}
                     </Button>
                   </div>
 

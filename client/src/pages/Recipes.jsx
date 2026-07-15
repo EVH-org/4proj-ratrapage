@@ -41,7 +41,7 @@ export default function Recipes() {
         <header style={{ marginBottom: '32px', textAlign: 'center' }}>
           <h1 style={{ color: 'var(--color-text-primary)', marginBottom: '8px' }}>Recettes</h1>
           <p style={{ color: 'var(--color-text-muted)' }}>
-            Explorez toutes vos recettes, classees par theme
+            Explorez toutes vos recettes, classées par thème
           </p>
           <div style={{ marginTop: '16px', display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link to="/recipes/new">
@@ -79,7 +79,7 @@ export default function Recipes() {
         {!busy && !err && data.length === 0 && (
           <Card style={{ padding: '48px', maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
             <p style={{ color: 'var(--color-text-muted)' }}>
-              Aucune recette pour le moment. Creez-en une !
+              Aucune recette pour le moment. Créez-en une !
             </p>
           </Card>
         )}

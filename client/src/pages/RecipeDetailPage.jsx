@@ -106,7 +106,7 @@ export default function RecipeDetailPage() {
                   color: recipe.visibility === 'public' ? 'var(--color-success-text)' : 'var(--color-text-muted)',
                   fontWeight: 600,
                 }}>
-                  {recipe.visibility === 'public' ? 'Publique' : 'Privee'}
+                  {recipe.visibility === 'public' ? 'Publique' : 'Privée'}
                 </span>
               )}
               {recipe.description && (
@@ -183,7 +183,7 @@ export default function RecipeDetailPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           {recipe.ingredients && recipe.ingredients.length > 0 && (
             <Card style={{ padding: 'var(--space-xl)' }}>
-              <h3 style={{ color: 'var(--color-primary)', marginBottom: '16px' }}>Ingredients</h3>
+              <h3 style={{ color: 'var(--color-primary)', marginBottom: '16px' }}>Ingrédients</h3>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                 {recipe.ingredients.map((ing) => (
                   <li key={ing.id} style={{ padding: '8px 0', borderBottom: '1px solid var(--color-border-subtle)', display: 'flex', gap: '8px' }}>
@@ -200,7 +200,7 @@ export default function RecipeDetailPage() {
 
           {recipe.steps && recipe.steps.length > 0 && (
             <Card style={{ padding: 'var(--space-xl)' }}>
-              <h3 style={{ color: 'var(--color-primary)', marginBottom: '16px' }}>Etapes</h3>
+              <h3 style={{ color: 'var(--color-primary)', marginBottom: '16px' }}>Étapes</h3>
               <ol style={{ paddingLeft: '20px', margin: 0 }}>
                 {recipe.steps.map((step) => (
                   <li key={step.id} style={{ padding: '12px 0', borderBottom: '1px solid var(--color-border-subtle)', lineHeight: '1.6' }}>

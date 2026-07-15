@@ -61,7 +61,7 @@ def _check_recipe_read_permission(
                 raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Authentification requise.")
             member = get_cookbook_member(db, recipe.cookbook_id, UUID(current_user_id))
             if not member:
-                raise HTTPException(status.HTTP_403_FORBIDDEN, "Acces refuse a cette recette.")
+                raise HTTPException(status.HTTP_403_FORBIDDEN, "Accès refusé à cette recette.")
 
 
 def _check_recipe_write_permission(db: Session, recipe, current_user_id: str) -> None:
@@ -107,12 +107,12 @@ def explore_recipes(
     personal = list_personal_recipes(db, uid, skip=0, limit=20)
     _populate(db, personal, current_user_id)
     if personal:
-        sections.append({"title": "Mes recettes", "subtitle": "Vos creations personnelles", "recipes": personal})
+        sections.append({"title": "Mes recettes", "subtitle": "Vos créations personnelles", "recipes": personal})
 
     personal_fav = list_personal_recipes(db, uid, skip=0, limit=20, favorites_only=True)
     _populate(db, personal_fav, current_user_id)
     if personal_fav:
-        sections.append({"title": "Mes recettes favorites", "subtitle": "Vos recettes preferees", "recipes": personal_fav})
+        sections.append({"title": "Mes recettes favorites", "subtitle": "Vos recettes préférées", "recipes": personal_fav})
 
     public_recipes = (
         db.query(Recipe)
@@ -121,7 +121,7 @@ def explore_recipes(
     )
     _populate(db, public_recipes, current_user_id)
     if public_recipes:
-        sections.append({"title": "Toutes les recettes", "subtitle": "Les dernieres recettes partagees", "recipes": public_recipes})
+        sections.append({"title": "Toutes les recettes", "subtitle": "Les dernières recettes partagées", "recipes": public_recipes})
 
     public_cb = (
         db.query(Recipe).join(Cookbook, Recipe.cookbook_id == Cookbook.id)
@@ -130,7 +130,7 @@ def explore_recipes(
     )
     _populate(db, public_cb, current_user_id)
     if public_cb:
-        sections.append({"title": "Recettes des cookbooks publics", "subtitle": "Partagees dans les livres publics", "recipes": public_cb})
+        sections.append({"title": "Recettes des cookbooks publics", "subtitle": "Partagées dans les livres publics", "recipes": public_cb})
 
     all_tags = list_all_tags(db)
     random.shuffle(all_tags)
@@ -138,12 +138,12 @@ def explore_recipes(
         tagged = list_all_recipes_by_tag(db, tag_obj.label, current_user_id=uid, skip=0, limit=8)
         _populate(db, tagged, current_user_id)
         if tagged:
-            sections.append({"title": f"Recettes << {tag_obj.label} >>", "subtitle": f"Recettes tagguees << {tag_obj.label} >>", "recipes": tagged})
+            sections.append({"title": f"Recettes << {tag_obj.label} >>", "subtitle": f"Recettes taguées << {tag_obj.label} >>", "recipes": tagged})
 
     cb_recipes = list_user_cookbook_recipes(db, uid, skip=0, limit=20)
     _populate(db, cb_recipes, current_user_id)
     if cb_recipes:
-        sections.append({"title": "Recettes dans mes cookbooks", "subtitle": "Les recettes partagees de vos livres", "recipes": cb_recipes})
+        sections.append({"title": "Recettes dans mes cookbooks", "subtitle": "Les recettes partagées de vos livres", "recipes": cb_recipes})
 
     return sections
 
@@ -244,7 +244,7 @@ def get_recipes_list(
         if not cookbook:
             raise HTTPException(status.HTTP_404_NOT_FOUND, "Cookbook introuvable.")
         if cookbook.visibility == "private" and not get_cookbook_member(db, cookbook_id, uid):
-            raise HTTPException(status.HTTP_403_FORBIDDEN, "Acces refuse.")
+            raise HTTPException(status.HTTP_403_FORBIDDEN, "Accès refusé.")
         recipes = list_cookbook_recipes(db, cookbook_id, skip=skip, limit=page_size, favorites_only=favorites_only, current_user_id=uid)
 
     _populate(db, recipes, current_user_id)
@@ -344,7 +344,7 @@ def favorite_recipe(
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Recette introuvable.")
     _check_recipe_read_permission(db, recipe, current_user_id)
     add_recipe_to_favorites(db, UUID(current_user_id), recipe_id)
-    return {"message": "Recette ajoutee aux favoris."}
+    return {"message": "Recette ajoutée aux favoris."}
 
 
 @router.delete("/recipes/{recipe_id}/favorite")
@@ -358,4 +358,4 @@ def unfavorite_recipe(
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Recette introuvable.")
     _check_recipe_read_permission(db, recipe, current_user_id)
     remove_recipe_from_favorites(db, UUID(current_user_id), recipe_id)
-    return {"message": "Recette retiree des favoris."}
+    return {"message": "Recette retirée des favoris."}

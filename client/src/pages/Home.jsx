@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { apiFetch, getToken } from '../lib/api';
+import { BookOpen, CalendarDays, PlusCircle, ChefHat } from 'lucide-react';
 
 export default function Home() {
   const [items, setItems] = useState([]);
@@ -163,7 +164,7 @@ export default function Home() {
       <div className="container page-enter delay-200" style={{ padding: '0 20px', marginTop: '-20px', position: 'relative', zIndex: 3 }}>
         <div className="stagger-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 'var(--space-xl)', padding: '20px 0' }}>
           <div className="ui-card hover-glow" style={{ padding: '32px 24px', textAlign: 'center', background: 'var(--color-bg-surface)' }}>
-            <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>📖</div>
+            <BookOpen size={40} color="var(--color-primary)" style={{ marginBottom: '12px' }} />
             <h3 style={{ color: 'var(--color-text-primary)', marginBottom: '8px', fontSize: 'var(--font-size-lg)' }}>Cookbooks</h3>
             <p style={{ color: 'var(--color-text-muted)', marginBottom: '20px', fontSize: 'var(--font-size-sm)' }}>Vos livres de recettes partagés.</p>
             <Link to="/cookbooks">
@@ -172,7 +173,7 @@ export default function Home() {
           </div>
 
           <div className="ui-card hover-glow" style={{ padding: '32px 24px', textAlign: 'center', background: 'var(--color-bg-surface)' }}>
-            <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>📋</div>
+            <CalendarDays size={40} color="var(--color-primary)" style={{ marginBottom: '12px' }} />
             <h3 style={{ color: 'var(--color-text-primary)', marginBottom: '8px', fontSize: 'var(--font-size-lg)' }}>Planning</h3>
             <p style={{ color: 'var(--color-text-muted)', marginBottom: '20px', fontSize: 'var(--font-size-sm)' }}>Repas de la semaine à venir.</p>
             <Link to="/planning">
@@ -181,7 +182,7 @@ export default function Home() {
           </div>
 
           <div className="ui-card hover-glow" style={{ padding: '32px 24px', textAlign: 'center', background: 'var(--color-bg-surface)' }}>
-            <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>✨</div>
+            <PlusCircle size={40} color="var(--color-primary)" style={{ marginBottom: '12px' }} />
             <h3 style={{ color: 'var(--color-text-primary)', marginBottom: '8px', fontSize: 'var(--font-size-lg)' }}>Ajouter</h3>
             <p style={{ color: 'var(--color-text-muted)', marginBottom: '20px', fontSize: 'var(--font-size-sm)' }}>Nouvelle recette personnelle.</p>
             <Link to="/recipes/new">
@@ -262,7 +263,7 @@ export default function Home() {
               color: 'var(--color-text-muted)',
             }}
           >
-            <div style={{ fontSize: '3rem', marginBottom: '16px' }}>🍽️</div>
+            <ChefHat size={48} color="var(--color-text-muted)" style={{ marginBottom: '16px' }} />
             <p>Aucune recette pour le moment. Créez-en une !</p>
           </div>
         </section>
