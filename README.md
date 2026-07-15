@@ -9,3 +9,6 @@ docker compose up --build
 
 ### Stop
 Ctrl+C puis: docker compose down
+
+## Notes techniques
+- Les appels API doublés en `npm run dev` sont dus au StrictMode de React (double invocation des effets en développement). En production (`npm run build` + `npm run preview`), chaque requête ne part qu'une seule fois.
