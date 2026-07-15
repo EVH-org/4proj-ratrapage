@@ -175,7 +175,7 @@ export default function Home() {
             <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>📋</div>
             <h3 style={{ color: 'var(--color-text-primary)', marginBottom: '8px', fontSize: 'var(--font-size-lg)' }}>Planning</h3>
             <p style={{ color: 'var(--color-text-muted)', marginBottom: '20px', fontSize: 'var(--font-size-sm)' }}>Repas de la semaine à venir.</p>
-            <Link to="/cookbooks">
+            <Link to="/planning">
               <button className="ui-btn ui-btn-primary" style={{ width: '100%' }}>Voir</button>
             </Link>
           </div>

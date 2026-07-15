@@ -16,6 +16,7 @@ import Recipes from './pages/Recipes.jsx';
 import GlobalRecipes from './pages/GlobalRecipes.jsx';
 import Profile from './pages/Profile.jsx';
 import MyRecipes from './pages/MyRecipes.jsx';
+import Planning from './pages/Planning.jsx';
 import NotFound from './pages/NotFound.jsx';
 
 createRoot(document.getElementById('root')).render(
