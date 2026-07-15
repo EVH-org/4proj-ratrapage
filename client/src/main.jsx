@@ -1,10 +1,45 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import AppLayout from './components/layout/AppLayout.jsx';
+import Home from './pages/Home.jsx';
+import UiKitDemo from './pages/UiKitDemo.jsx';
+import Login from './pages/Login.jsx';
+import Register from './pages/Register.jsx';
+import CookbooksPage from './pages/Cookbooks.jsx';
+import CookbookDetailPage from './pages/CookbookDetailPage.jsx';
+import RecipeCreate from './pages/RecipeCreate.jsx';
+import RecipeDetailPage from './pages/RecipeDetailPage.jsx';
+import RecipeEdit from './pages/RecipeEdit.jsx';
+import CookbookCreate from './pages/CookbookCreate.jsx';
+import Recipes from './pages/Recipes.jsx';
+import GlobalRecipes from './pages/GlobalRecipes.jsx';
+import Profile from './pages/Profile.jsx';
+import MyRecipes from './pages/MyRecipes.jsx';
+import NotFound from './pages/NotFound.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<AppLayout />}>
+          <Route index element={<Home />} />
+          <Route path="uikit" element={<UiKitDemo />} />
+          <Route path="cookbooks" element={<CookbooksPage />} />
+          <Route path="cookbooks/:cookbookId" element={<CookbookDetailPage />} />
+          <Route path="recipes/new" element={<RecipeCreate />} />
+          <Route path="recipes/:recipeId" element={<RecipeDetailPage />} />
+          <Route path="recipes/:recipeId/edit" element={<RecipeEdit />} />
+          <Route path="cookbooks/new" element={<CookbookCreate />} />
+          <Route path="recipes" element={<GlobalRecipes />} />
+          <Route path="explore" element={<Recipes />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="my-recipes" element={<MyRecipes />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </BrowserRouter>
   </StrictMode>,
 )
