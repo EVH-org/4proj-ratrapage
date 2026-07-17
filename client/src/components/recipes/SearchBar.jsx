@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { apiFetch } from '../../lib/api';
 import Tag from '../ui/Tag';
 import Button from '../ui/Button';
+import { Search, ChevronUp, ChevronDown } from 'lucide-react';
 
 export default function SearchBar({ onSearch }) {
   const [q, setQ] = useState('');
@@ -86,9 +87,7 @@ export default function SearchBar({ onSearch }) {
             placeholder="Rechercher une recette..."
             style={{ paddingRight: '36px' }}
           />
-          <span style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-muted)', pointerEvents: 'none', fontSize: '1.1rem' }}>
-            &#128269;
-          </span>
+          <Search size={18} style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-muted)', pointerEvents: 'none' }} />
         </div>
 
         <Button
@@ -96,7 +95,7 @@ export default function SearchBar({ onSearch }) {
           onClick={() => setExp(!exp)}
           style={{ padding: '10px 16px', fontSize: 'var(--font-size-sm)' }}
         >
-          {exp ? 'Filtres ▲' : 'Filtres ▼'}
+          {exp ? <><ChevronUp size={16} style={{ verticalAlign: 'middle' }} /></> : <><ChevronDown size={16} style={{ verticalAlign: 'middle' }} /></>} Filtres
         </Button>
 
         {dirty && (

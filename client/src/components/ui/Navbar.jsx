@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { logout } from '../../lib/auth';
 import { getToken } from '../../lib/api';
+import { ChevronDown, X } from 'lucide-react';
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -73,15 +74,12 @@ export default function Navbar() {
                 }}
               >
                 <span style={{ fontSize: '1.1rem' }}>Mon compte</span>
-                <span
+                <ChevronDown size={12}
                   style={{
-                    fontSize: '0.7rem',
                     transform: me ? 'rotate(180deg)' : 'none',
                     transition: 'transform 0.3s ease',
                   }}
-                >
-                  ▼
-                </span>
+                />
               </button>
 
               {me && (
@@ -187,7 +185,7 @@ export default function Navbar() {
           <div className="nav-mobile-panel animate-slide-in-right" style={mobilePanelStyle} onClick={(e) => e.stopPropagation()}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
               <span style={{ fontSize: 'var(--font-size-xl)', fontWeight: 700, color: 'var(--color-primary)' }}>SUPMEAL</span>
-              <button onClick={() => setBur(false)} style={closeBtnStyle}>✕</button>
+              <button onClick={() => setBur(false)} style={closeBtnStyle}><X size={20} /></button>
             </div>
 
             {links.map((l) => (

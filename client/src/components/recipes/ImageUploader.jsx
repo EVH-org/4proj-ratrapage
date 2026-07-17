@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { apiFetch } from '../../lib/api';
+import { X, Image, Camera } from 'lucide-react';
 
 export default function ImageUploader({ recipeId, currentImageUrl, onImageChange }) {
   const [uploading, setUploading] = useState(false);
@@ -66,7 +67,7 @@ export default function ImageUploader({ recipeId, currentImageUrl, onImageChange
         <div style={{ position: 'relative', borderRadius: 'var(--radius-md)', overflow: 'hidden' }}>
           <img src={currentImageUrl} alt="Apercu" className="img-zoom-wrapper" style={{ width: '100%', maxHeight: '300px', objectFit: 'cover', borderRadius: 'var(--radius-md)', display: 'block' }} />
           <button type="button" onClick={del} disabled={uploading} style={{ position: 'absolute', top: '8px', right: '8px', background: 'rgba(0,0,0,0.6)', color: '#fff', border: 'none', borderRadius: 'var(--radius-full)', width: '36px', height: '36px', cursor: 'pointer', fontSize: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.2s' }} onMouseEnter={(e) => (e.target.style.background = 'rgba(211,47,47,0.8)')} onMouseLeave={(e) => (e.target.style.background = 'rgba(0,0,0,0.6)')} title="Supprimer l'image">
-            ✕
+            <X size={18} />
           </button>
         </div>
       )}
@@ -77,7 +78,7 @@ export default function ImageUploader({ recipeId, currentImageUrl, onImageChange
           <span style={{ color: 'var(--color-text-muted)', fontWeight: 500 }}>Televersement en cours...</span>
         ) : (
           <span style={{ color: 'var(--color-primary)', fontWeight: 600, fontSize: 'var(--font-size-sm)' }}>
-            {currentImageUrl ? '🖼️ Changer l\'image' : '📷 Cliquez pour ajouter une image'}
+            {currentImageUrl ? <><Image size={18} style={{ marginRight: '6px', verticalAlign: 'middle' }} />Changer l'image</> : <><Camera size={18} style={{ marginRight: '6px', verticalAlign: 'middle' }} />Cliquez pour ajouter une image</>}
           </span>
         )}
       </div>

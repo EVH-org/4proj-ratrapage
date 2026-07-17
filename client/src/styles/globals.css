@@ -199,7 +199,7 @@ button, input, select, textarea {
   color: var(--color-text-primary);
 }
 
-.ui-form-input:placeholder {
+.ui-form-input::placeholder {
   color: var(--color-text-disabled);
 }
 
