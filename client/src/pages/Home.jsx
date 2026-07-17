@@ -40,13 +40,6 @@ export default function Home() {
           textAlign: 'center',
         }}
       >
-        <span className="floating-particle">🍕</span>
-        <span className="floating-particle">🥗</span>
-        <span className="floating-particle">🍝</span>
-        <span className="floating-particle">🥘</span>
-        <span className="floating-particle">🧁</span>
-        <span className="floating-particle">🍲</span>
-
         <div
           className="container"
           style={{
