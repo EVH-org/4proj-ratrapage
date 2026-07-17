@@ -5,6 +5,7 @@ import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import Tag from '../components/ui/Tag';
 import ImageUploader from '../components/recipes/ImageUploader';
+import { CalendarPlus, X } from 'lucide-react';
 
 export default function RecipeDetailPage() {
   const { recipeId } = useParams();
@@ -16,6 +17,10 @@ export default function RecipeDetailPage() {
   const [imageUrl, setImageUrl] = useState(null);
   const [isOwner, setIsOwner] = useState(false);
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [showPlanner, setShowPlanner] = useState(false);
+  const [planDate, setPlanDate] = useState(() => new Date().toISOString().slice(0, 10));
+  const [planSlot, setPlanSlot] = useState('midi');
+  const [planning, setPlanning] = useState(false);
 
   useEffect(() => {
     const token = getToken();
@@ -66,6 +71,22 @@ export default function RecipeDetailPage() {
       navigate('/recipes', { replace: true });
     } catch (err) {
       setError(err.message || 'Erreur suppression');
+    }
+  };
+
+  const addToPlan = async () => {
+    setPlanning(true);
+    try {
+      await apiFetch('/planning', {
+        method: 'POST',
+        body: { date: planDate, slot: planSlot, recipe_id: recipeId },
+      });
+      setShowPlanner(false);
+      alert('Recette ajoutée au planning !');
+    } catch (e) {
+      alert(e.message || 'Erreur');
+    } finally {
+      setPlanning(false);
     }
   };
 
@@ -129,6 +150,10 @@ export default function RecipeDetailPage() {
             )}
             <Button variant="ghost" onClick={fav}>
               {isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+            </Button>
+            <Button variant="primary" onClick={() => setShowPlanner(true)}>
+              <CalendarPlus size={16} style={{ marginRight: 6 }} />
+              Planifier
             </Button>
           </div>
         </div>
@@ -218,6 +243,57 @@ export default function RecipeDetailPage() {
           </Link>
         </div>
       </div>
+
+      {showPlanner && (
+        <div style={{
+          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100,
+        }} onClick={() => setShowPlanner(false)}>
+          <Card style={{
+            width: '90%', maxWidth: '380px', padding: '24px',
+          }} onClick={(e) => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <h3 style={{ margin: 0, color: 'var(--color-text-primary)' }}>Planifier cette recette</h3>
+              <button onClick={() => setShowPlanner(false)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)' }}>
+                <X size={18} />
+              </button>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div>
+                <label className="ui-form-label">Date</label>
+                <input
+                  type="date"
+                  className="ui-form-input"
+                  value={planDate}
+                  onChange={(e) => setPlanDate(e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="ui-form-label">Créneau</label>
+                <select
+                  className="ui-form-input"
+                  value={planSlot}
+                  onChange={(e) => setPlanSlot(e.target.value)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <option value="midi">Midi</option>
+                  <option value="soir">Soir</option>
+                </select>
+              </div>
+              <Button
+                variant="primary"
+                onClick={addToPlan}
+                disabled={planning}
+                style={{ marginTop: '8px' }}
+              >
+                {planning ? 'Ajout...' : 'Ajouter au planning'}
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
     </>
   );
 }
