@@ -1,6 +1,9 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import './styles/theme.css';
+import './styles/globals.css';
+import './styles/animations.css';
 import AppLayout from './components/layout/AppLayout.jsx';
 import Home from './pages/Home.jsx';
 import UiKitDemo from './pages/UiKitDemo.jsx';
