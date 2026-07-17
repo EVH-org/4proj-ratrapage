@@ -69,7 +69,7 @@ export default function Register() {
           />
 
           <Input
-            label="Adresse E-mail *"
+            label="Adresse e-mail *"
             type="email"
             placeholder="gaston@cuisine.fr"
             value={email}

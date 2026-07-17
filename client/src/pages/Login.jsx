@@ -29,7 +29,7 @@ export default function Login() {
           navigate('/cookbooks', { replace: true });
         })
         .catch((err) => {
-          setError(err.message || 'Auto-login error');
+          setError(err.message || 'Erreur d\'auto-connexion');
         })
         .finally(() => {
           setLoading(false);
@@ -82,7 +82,7 @@ export default function Login() {
 
         <form onSubmit={go} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           <Input
-            label="Adresse E-mail"
+            label="Adresse e-mail"
             type="email"
             placeholder="chef@cuisine.fr"
             value={email}
@@ -132,7 +132,7 @@ export default function Login() {
                     navigate('/cookbooks', { replace: true });
                   })
                   .catch((err) => {
-                    setError(err.message || 'Auto-login error');
+                    setError(err.message || 'Erreur d\'auto-connexion');
                   })
                   .finally(() => {
                     setLoading(false);

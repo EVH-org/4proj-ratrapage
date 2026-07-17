@@ -38,7 +38,7 @@ function CardItem({ r }) {
             </p>
           )}
           <div className="recipe-card-meta">
-            {r.prep_time_minutes && <span>{r.prep_time_minutes} min prep.</span>}
+            {r.prep_time_minutes && <span>{r.prep_time_minutes} min prép.</span>}
             {r.cook_time_minutes && <span>{r.cook_time_minutes} min cuisson</span>}
             {r.servings && <span>{r.servings} pers.</span>}
           </div>

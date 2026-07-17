@@ -39,6 +39,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="explore" element={<Recipes />} />
           <Route path="profile" element={<Profile />} />
           <Route path="my-recipes" element={<MyRecipes />} />
+          <Route path="planning" element={<Planning />} />
           <Route path="*" element={<NotFound />} />
         </Route>
         <Route path="/login" element={<Login />} />

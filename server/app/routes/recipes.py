@@ -40,7 +40,7 @@ def _resolve_scope(
             raise HTTPException(status.HTTP_404_NOT_FOUND, "Cookbook introuvable.")
         member = get_cookbook_member(db, body.cookbook_id, UUID(current_user_id))
         if not member or member.role not in ("owner", "editor"):
-            raise HTTPException(status.HTTP_403_FORBIDDEN, "Role owner ou editor requis pour ajouter une recette.")
+            raise HTTPException(status.HTTP_403_FORBIDDEN, "Rôle owner ou éditeur requis pour ajouter une recette.")
         body.owner_user_id = None
 
 
@@ -67,11 +67,11 @@ def _check_recipe_read_permission(
 def _check_recipe_write_permission(db: Session, recipe, current_user_id: str) -> None:
     if recipe.scope_type == "personal":
         if str(recipe.owner_user_id) != current_user_id:
-            raise HTTPException(status.HTTP_403_FORBIDDEN, "Modification non autorisee.")
+            raise HTTPException(status.HTTP_403_FORBIDDEN, "Modification non autorisée.")
     elif recipe.scope_type == "cookbook":
         member = get_cookbook_member(db, recipe.cookbook_id, UUID(current_user_id))
         if not member or member.role not in ("owner", "editor"):
-            raise HTTPException(status.HTTP_403_FORBIDDEN, "Seuls les editeurs ou proprietaires peuvent modifier.")
+            raise HTTPException(status.HTTP_403_FORBIDDEN, "Seuls les éditeurs ou propriétaires peuvent modifier.")
 
 
 def _populate(db, recipes, user_id):

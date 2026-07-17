@@ -36,7 +36,7 @@ def _get_cookbook_or_404(db: Session, cookbook_id: UUID):
 def _require_owner(db: Session, cookbook_id: UUID, user_id: str) -> None:
     member = get_cookbook_member(db, cookbook_id, UUID(user_id))
     if not member or member.role != "owner":
-        raise HTTPException(status.HTTP_403_FORBIDDEN, "Action non autorisee. Proprietaire requis.")
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "Action non autorisée. Propriétaire requis.")
 
 
 @router.post("/cookbooks", response_model=CookbookRead, status_code=status.HTTP_201_CREATED)
@@ -123,7 +123,7 @@ def update_member(
     cookbook = _get_cookbook_or_404(db, cookbook_id)
     _require_owner(db, cookbook_id, current_user_id)
     if body.role not in ("reader", "editor"):
-        raise HTTPException(status.HTTP_400_BAD_REQUEST, "Role invalide. Seuls 'reader' et 'editor' sont autorises.")
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "Rôle invalide. Seuls 'reader' et 'editor' sont autorisés.")
     member = get_cookbook_member(db, cookbook_id, user_id)
     if not member:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Membre introuvable")
@@ -158,7 +158,7 @@ def create_invitation(
     cookbook = _get_cookbook_or_404(db, cookbook_id)
     _require_owner(db, cookbook_id, current_user_id)
     if body.role_assigned not in ("reader", "editor"):
-        raise HTTPException(status.HTTP_400_BAD_REQUEST, "Role assigne invalide. Seuls 'reader' et 'editor' sont autorises.")
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "Rôle assigné invalide. Seuls 'reader' et 'editor' sont autorisés.")
     return create_cookbook_invitation(db, cookbook_id, body)
 
 
@@ -186,13 +186,13 @@ def accept_invitation_route(
     if invitation.status != "pending":
         raise HTTPException(status.HTTP_400_BAD_REQUEST, "L'invitation n'est plus valide")
     if invitation.expires_at.replace(tzinfo=None) < datetime.utcnow():
-        raise HTTPException(status.HTTP_400_BAD_REQUEST, "L'invitation a expire")
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "L'invitation a expiré")
     if get_cookbook_member(db, invitation.cookbook_id, UUID(current_user_id)):
-        raise HTTPException(status.HTTP_400_BAD_REQUEST, "Vous etes deja membre de ce cookbook")
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "Vous êtes déjà membre de ce cookbook")
     update_cookbook_invitation_status(db, invitation, "accepted")
     add_cookbook_member(db, invitation.cookbook_id, UUID(current_user_id), invitation.role_assigned)
     return {
-        "detail": "Invitation acceptee",
+        "detail": "Invitation acceptée",
         "cookbook_id": str(invitation.cookbook_id),
         "role_assigned": invitation.role_assigned,
     }
@@ -210,4 +210,4 @@ def decline_invitation_route(
     if invitation.status != "pending":
         raise HTTPException(status.HTTP_400_BAD_REQUEST, "L'invitation n'est plus valide")
     update_cookbook_invitation_status(db, invitation, "declined")
-    return {"detail": "Invitation declinee"}
+    return {"detail": "Invitation déclinée"}

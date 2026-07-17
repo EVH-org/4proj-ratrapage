@@ -278,7 +278,7 @@ export default function CookbookDetailPage() {
                         </p>
                       )}
                       <div className="recipe-card-meta">
-                        {recipe.prep_time_minutes && <span>{recipe.prep_time_minutes} min prep.</span>}
+                        {recipe.prep_time_minutes && <span>{recipe.prep_time_minutes} min prép.</span>}
                         {recipe.cook_time_minutes && <span>{recipe.cook_time_minutes} min cuisson</span>}
                         {recipe.servings && <span>{recipe.servings} pers.</span>}
                       </div>
