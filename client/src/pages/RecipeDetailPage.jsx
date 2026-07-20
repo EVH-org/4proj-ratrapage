@@ -248,7 +248,7 @@ export default function RecipeDetailPage() {
         <div style={{
           position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)',
           display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100,
-        }} onClick={() => setShowPlanner(false)}>
+        }} onClick={(e) => { if (e.target === e.currentTarget) setShowPlanner(false); }}>
           <Card style={{
             width: '90%', maxWidth: '380px', padding: '24px',
           }} onClick={(e) => e.stopPropagation()}>

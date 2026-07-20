@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { getToken } from '../lib/api';
 import { login } from '../lib/auth';
 import Button from '../components/ui/Button';
@@ -13,10 +13,12 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get('redirect') || '/cookbooks';
 
   useEffect(() => {
     if (getToken()) {
-      navigate('/cookbooks', { replace: true });
+      navigate(redirectTo, { replace: true });
       return;
     }
 
@@ -26,7 +28,7 @@ export default function Login() {
       setLoading(true);
       login('testchef@cuisine.fr', 'chefpassword')
         .then(() => {
-          navigate('/cookbooks', { replace: true });
+          navigate(redirectTo, { replace: true });
         })
         .catch((err) => {
           setError(err.message || 'Erreur d\'auto-connexion');
@@ -129,7 +131,7 @@ export default function Login() {
                 setLoading(true);
                 login('testchef@cuisine.fr', 'chefpassword')
                   .then(() => {
-                    navigate('/cookbooks', { replace: true });
+                    navigate(redirectTo, { replace: true });
                   })
                   .catch((err) => {
                     setError(err.message || 'Erreur d\'auto-connexion');

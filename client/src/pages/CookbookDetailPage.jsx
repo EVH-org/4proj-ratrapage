@@ -135,7 +135,7 @@ export default function CookbookDetailPage() {
       });
 
       setInvitations((prev) => [...prev, inv]);
-      setInviteSt({ err: '', ok: `Invitation créée ! Token: ${inv.token}`, busy: false });
+      setInviteSt({ err: '', ok: inv.token, busy: false });
       setShowInviteForm(false);
     } catch (e) {
       setInviteSt({ err: e.message || 'Erreur lors de la creation de l\'invitation', ok: '', busy: false });
@@ -377,9 +377,24 @@ export default function CookbookDetailPage() {
                   border: '1px solid var(--color-success, #2ecc71)',
                   borderRadius: 'var(--radius-md)',
                   fontSize: 'var(--font-size-sm)',
-                  wordBreak: 'break-all',
                 }}>
-                  {inviteSt.ok}
+                  <p style={{ margin: '0 0 8px', fontWeight: 600 }}>Invitation créée !</p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <code style={{
+                      flex: 1, fontSize: '0.85em', padding: '6px 10px',
+                      background: 'var(--color-bg-surface)', borderRadius: 'var(--radius-sm)',
+                      overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                    }}>
+                      {window.location.origin}/invite/{inviteSt.ok}
+                    </code>
+                    <Button variant="secondary" style={{ padding: '4px 10px', fontSize: 'var(--font-size-xs)' }}
+                      onClick={() => {
+                        navigator.clipboard.writeText(`${window.location.origin}/invite/${inviteSt.ok}`);
+                        alert('Lien copié !');
+                      }}>
+                      Copier
+                    </Button>
+                  </div>
                 </div>
               )}
 
@@ -402,7 +417,7 @@ export default function CookbookDetailPage() {
                     }}>
                       <span>
                         <Tag variant="secondary" style={{ marginRight: '8px' }}>{inv.role_assigned}</Tag>
-                        <code style={{ fontSize: '0.85em' }}>{inv.token.substring(0, 12)}...</code>
+                        <code style={{ fontSize: '0.85em' }}>/invite/{inv.token.substring(0, 12)}...</code>
                       </span>
                       <span style={{ color: 'var(--color-text-muted)', fontSize: '0.85em' }}>
                         Expire le {new Date(inv.expires_at).toLocaleDateString()}

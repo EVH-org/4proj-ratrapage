@@ -20,6 +20,7 @@ import GlobalRecipes from './pages/GlobalRecipes.jsx';
 import Profile from './pages/Profile.jsx';
 import MyRecipes from './pages/MyRecipes.jsx';
 import Planning from './pages/Planning.jsx';
+import AcceptInvitation from './pages/AcceptInvitation.jsx';
 import NotFound from './pages/NotFound.jsx';
 
 createRoot(document.getElementById('root')).render(
@@ -40,6 +41,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="profile" element={<Profile />} />
           <Route path="my-recipes" element={<MyRecipes />} />
           <Route path="planning" element={<Planning />} />
+          <Route path="invite/:token" element={<AcceptInvitation />} />
           <Route path="*" element={<NotFound />} />
         </Route>
         <Route path="/login" element={<Login />} />
