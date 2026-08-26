@@ -3,57 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { apiFetch, getToken } from '../lib/api';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
-import Tag from '../components/ui/Tag';
-import { GRADS, grad } from '../lib/shared';
 import SearchBar from '../components/recipes/SearchBar';
-
-function CardItem({ r }) {
-  return (
-    <Link to={`/recipes/${r.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-      <Card className="ui-card-interactive" style={{ textAlign: 'left', cursor: 'pointer' }}>
-        <div
-          className="recipe-card-img-wrapper"
-          style={{
-            background: r.image_url
-              ? `url(${r.image_url}) center/cover no-repeat`
-              : grad(r.id),
-          }}
-        >
-          {r.image_url && (
-            <img
-              src={r.image_url}
-              alt={r.title}
-              className="recipe-card-img"
-              style={{ opacity: 0 }}
-            />
-          )}
-        </div>
-        <div style={{ padding: 'var(--space-lg)' }}>
-          <h3 style={{ color: 'var(--color-text-primary)', marginBottom: '8px' }}>
-            {r.title}
-          </h3>
-          {r.description && (
-            <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)', marginBottom: '12px' }}>
-              {r.description}
-            </p>
-          )}
-          <div className="recipe-card-meta">
-            {r.prep_time_minutes && <span>{r.prep_time_minutes} min prép.</span>}
-            {r.cook_time_minutes && <span>{r.cook_time_minutes} min cuisson</span>}
-            {r.servings && <span>{r.servings} pers.</span>}
-          </div>
-          {r.tags && r.tags.length > 0 && (
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: '8px' }}>
-              {r.tags.map((tag) => (
-                <Tag key={tag.id} variant="primary">{tag.label}</Tag>
-              ))}
-            </div>
-          )}
-        </div>
-      </Card>
-    </Link>
-  );
-}
+import RecipeCard from '../components/recipes/RecipeCard';
 
 export default function GlobalRecipes() {
   const [items, setItems] = useState([]);
@@ -156,7 +107,9 @@ export default function GlobalRecipes() {
         {!busy && !err && list.length > 0 && (
           <div className="page-enter stagger-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 'var(--space-lg)' }}>
             {list.map((recipe) => (
-              <CardItem key={recipe.id} r={recipe} />
+              <Link key={recipe.id} to={`/recipes/${recipe.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                <RecipeCard recipe={recipe} onClick={() => {}} />
+              </Link>
             ))}
           </div>
         )}

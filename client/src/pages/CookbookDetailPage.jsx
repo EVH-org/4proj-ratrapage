@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { apiFetch, getToken } from '../lib/api';
-import { GRADS, grad } from '../lib/shared';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import Tag from '../components/ui/Tag';
 import Input from '../components/ui/Input';
-import { logout } from '../lib/auth';
+import RecipeCard from '../components/recipes/RecipeCard';
+
+const isExpired = (dateStr) => new Date(dateStr) < new Date();
 
 export default function CookbookDetailPage() {
   const { cookbookId } = useParams();
@@ -142,6 +143,15 @@ export default function CookbookDetailPage() {
     }
   };
 
+  const cancelInvitation = async (invitationId) => {
+    try {
+      await apiFetch(`/cookbooks/${cookbookId}/invitations/${invitationId}`, { method: 'DELETE' });
+      setInvitations((prev) => prev.filter((inv) => inv.id !== invitationId));
+    } catch (e) {
+      alert(e.message || 'Erreur lors de l\'annulation de l\'invitation');
+    }
+  };
+
   if (busy) {
     return (
       <>
@@ -244,46 +254,7 @@ export default function CookbookDetailPage() {
             <div className="recipe-grid">
               {recipes.map((recipe) => (
                 <Link to={`/recipes/${recipe.id}`} key={recipe.id} style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <Card className="ui-card-interactive" style={{ textAlign: 'left', cursor: 'pointer' }}>
-                    <div
-                      className="recipe-card-img-wrapper"
-                      style={{
-                        background: recipe.image_url
-                          ? `url(${recipe.image_url}) center/cover no-repeat`
-                          : grad(recipe.id),
-                      }}
-                    >
-                      {recipe.image_url && (
-                        <img src={recipe.image_url} alt={recipe.title} className="recipe-card-img" style={{ opacity: 0 }} />
-                      )}
-                    </div>
-                    <div style={{ padding: 'var(--space-lg)' }}>
-                      <h4 style={{
-                        color: 'var(--color-text-primary)',
-                        marginBottom: '8px',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                      }}>{recipe.title}</h4>
-                      {recipe.description && (
-                        <p style={{
-                          color: 'var(--color-text-muted)',
-                          fontSize: 'var(--font-size-sm)',
-                          marginBottom: '8px',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                        }}>
-                          {recipe.description}
-                        </p>
-                      )}
-                      <div className="recipe-card-meta">
-                        {recipe.prep_time_minutes && <span>{recipe.prep_time_minutes} min prép.</span>}
-                        {recipe.cook_time_minutes && <span>{recipe.cook_time_minutes} min cuisson</span>}
-                        {recipe.servings && <span>{recipe.servings} pers.</span>}
-                      </div>
-                    </div>
-                  </Card>
+                  <RecipeCard recipe={recipe} onClick={() => {}} />
                 </Link>
               ))}
             </div>
@@ -403,27 +374,66 @@ export default function CookbookDetailPage() {
                   <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)', marginBottom: '8px' }}>
                     Invitations en attente ({invitations.length})
                   </p>
-                  {invitations.map((inv) => (
-                    <div key={inv.id} style={{
-                      padding: '8px 12px',
-                      marginBottom: '4px',
-                      backgroundColor: 'var(--color-bg-subtle)',
-                      borderRadius: 'var(--radius-sm)',
-                      fontSize: 'var(--font-size-sm)',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      wordBreak: 'break-all',
-                    }}>
-                      <span>
-                        <Tag variant="secondary" style={{ marginRight: '8px' }}>{inv.role_assigned}</Tag>
-                        <code style={{ fontSize: '0.85em' }}>/invite/{inv.token.substring(0, 12)}...</code>
-                      </span>
-                      <span style={{ color: 'var(--color-text-muted)', fontSize: '0.85em' }}>
-                        Expire le {new Date(inv.expires_at).toLocaleDateString()}
-                      </span>
-                    </div>
-                  ))}
+{invitations.map((inv) => {
+                      const expired = isExpired(inv.expires_at);
+                      const link = `${window.location.origin}/invite/${inv.token}`;
+                      return (
+                        <div key={inv.id} style={{
+                          padding: '8px 12px',
+                          marginBottom: '4px',
+                          backgroundColor: expired ? 'var(--color-bg-error, #fef2f2)' : 'var(--color-bg-subtle)',
+                          borderRadius: 'var(--radius-sm)',
+                          fontSize: 'var(--font-size-sm)',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          gap: '8px',
+                          opacity: expired ? 0.7 : 1,
+                        }}>
+                          <span style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <Tag variant="secondary" style={{ flexShrink: 0 }}>{inv.role_assigned}</Tag>
+                            <code style={{
+                              fontSize: '0.85em',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                            }}>
+                              {link}
+                            </code>
+                          </span>
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+                            <span style={{
+                              color: expired ? 'var(--color-border-error)' : 'var(--color-text-muted)',
+                              fontSize: '0.85em',
+                              whiteSpace: 'nowrap',
+                            }}>
+                              {expired ? 'Expirée' : `Expire le ${new Date(inv.expires_at).toLocaleDateString()}`}
+                            </span>
+                            <Button
+                              variant="ghost"
+                              style={{ padding: '2px 8px', fontSize: 'var(--font-size-xs)' }}
+                              onClick={() => {
+                                navigator.clipboard.writeText(link);
+                                alert('Lien copié !');
+                              }}
+                            >
+                              Copier
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              style={{
+                                padding: '2px 8px',
+                                fontSize: 'var(--font-size-xs)',
+                                color: 'var(--color-border-error)',
+                              }}
+                              onClick={() => cancelInvitation(inv.id)}
+                            >
+                              Annuler
+                            </Button>
+                          </span>
+                        </div>
+                      );
+                    })}
                 </div>
               )}
 

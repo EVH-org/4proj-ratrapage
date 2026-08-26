@@ -7,15 +7,19 @@ from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.crud.cookbook import (
     add_cookbook_member, create_cookbook, create_cookbook_invitation,
-    delete_cookbook, delete_cookbook_member, get_cookbook_by_id,
-    get_cookbook_invitation_by_token, get_cookbook_invitations,
+    delete_cookbook, delete_cookbook_invitation, delete_cookbook_member,
+    get_cookbook_by_id,
+    get_cookbook_invitation_by_id, get_cookbook_invitation_by_token,
+    get_cookbook_invitations,
     get_cookbook_member, list_cookbook_members, list_cookbooks_for_user,
-    update_cookbook, update_cookbook_invitation_status, update_cookbook_member_role,
+    update_cookbook, update_cookbook_invitation, update_cookbook_invitation_status,
+    update_cookbook_member_role,
 )
 from app.schemas.cookbook import (
     CookbookCreate, CookbookUpdate, CookbookRead,
     CookbookMemberRead, CookbookMemberUpdate,
-    CookbookInvitationCreate, CookbookInvitationRead,
+    CookbookInvitationCreate, CookbookInvitationUpdate, CookbookInvitationRead,
+    CookbookInvitationPublicInfo,
 )
 from app.security import get_user_id, get_optional_user_id
 
@@ -37,6 +41,31 @@ def _require_owner(db: Session, cookbook_id: UUID, user_id: str) -> None:
     member = get_cookbook_member(db, cookbook_id, UUID(user_id))
     if not member or member.role != "owner":
         raise HTTPException(status.HTTP_403_FORBIDDEN, "Action non autorisée. Propriétaire requis.")
+
+
+def _get_pending_invitation_by_token(db: Session, token: str):
+    invitation = get_cookbook_invitation_by_token(db, token)
+    if not invitation:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Invitation introuvable")
+    if invitation.status != "pending":
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "L'invitation n'est plus valide")
+    if invitation.expires_at.replace(tzinfo=None) < datetime.utcnow():
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "L'invitation a expiré")
+    return invitation
+
+
+def _get_and_validate_invitation(db: Session, cookbook_id: UUID, invitation_id: UUID):
+    invitation = get_cookbook_invitation_by_id(db, invitation_id)
+    if not invitation or invitation.cookbook_id != cookbook_id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Invitation introuvable")
+    if invitation.status != "pending":
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "Seules les invitations en attente peuvent être modifiées")
+    return invitation
+
+
+def _validate_role(role: str) -> None:
+    if role not in ("reader", "editor"):
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "Rôle assigné invalide. Seuls 'reader' et 'editor' sont autorisés.")
 
 
 @router.post("/cookbooks", response_model=CookbookRead, status_code=status.HTTP_201_CREATED)
@@ -157,8 +186,7 @@ def create_invitation(
 ):
     cookbook = _get_cookbook_or_404(db, cookbook_id)
     _require_owner(db, cookbook_id, current_user_id)
-    if body.role_assigned not in ("reader", "editor"):
-        raise HTTPException(status.HTTP_400_BAD_REQUEST, "Rôle assigné invalide. Seuls 'reader' et 'editor' sont autorisés.")
+    _validate_role(body.role_assigned)
     return create_cookbook_invitation(db, cookbook_id, body)
 
 
@@ -180,13 +208,7 @@ def accept_invitation_route(
     db: Session = Depends(get_db),
     current_user_id: str = Depends(get_user_id),
 ):
-    invitation = get_cookbook_invitation_by_token(db, token)
-    if not invitation:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "Invitation introuvable")
-    if invitation.status != "pending":
-        raise HTTPException(status.HTTP_400_BAD_REQUEST, "L'invitation n'est plus valide")
-    if invitation.expires_at.replace(tzinfo=None) < datetime.utcnow():
-        raise HTTPException(status.HTTP_400_BAD_REQUEST, "L'invitation a expiré")
+    invitation = _get_pending_invitation_by_token(db, token)
     if get_cookbook_member(db, invitation.cookbook_id, UUID(current_user_id)):
         raise HTTPException(status.HTTP_400_BAD_REQUEST, "Vous êtes déjà membre de ce cookbook")
     update_cookbook_invitation_status(db, invitation, "accepted")
@@ -204,10 +226,53 @@ def decline_invitation_route(
     db: Session = Depends(get_db),
     current_user_id: str = Depends(get_user_id),
 ):
-    invitation = get_cookbook_invitation_by_token(db, token)
-    if not invitation:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "Invitation introuvable")
-    if invitation.status != "pending":
-        raise HTTPException(status.HTTP_400_BAD_REQUEST, "L'invitation n'est plus valide")
+    invitation = _get_pending_invitation_by_token(db, token)
     update_cookbook_invitation_status(db, invitation, "declined")
     return {"detail": "Invitation déclinée"}
+
+
+@router.get("/invitations/{token}", response_model=CookbookInvitationPublicInfo)
+def get_invitation_by_token(
+    token: str,
+    db: Session = Depends(get_db),
+):
+    invitation = _get_pending_invitation_by_token(db, token)
+    cookbook = get_cookbook_by_id(db, invitation.cookbook_id)
+    return CookbookInvitationPublicInfo(
+        token=invitation.token,
+        cookbook_id=invitation.cookbook_id,
+        cookbook_name=cookbook.name if cookbook else "Cookbook inconnu",
+        role_assigned=invitation.role_assigned,
+        expires_at=invitation.expires_at,
+        status=invitation.status,
+        created_at=invitation.created_at,
+    )
+
+
+@router.patch("/cookbooks/{cookbook_id}/invitations/{invitation_id}", response_model=CookbookInvitationRead)
+def update_invitation(
+    cookbook_id: UUID,
+    invitation_id: UUID,
+    body: CookbookInvitationUpdate,
+    db: Session = Depends(get_db),
+    current_user_id: str = Depends(get_user_id),
+):
+    _ = _get_cookbook_or_404(db, cookbook_id)
+    _require_owner(db, cookbook_id, current_user_id)
+    invitation = _get_and_validate_invitation(db, cookbook_id, invitation_id)
+    if body.role_assigned is not None:
+        _validate_role(body.role_assigned)
+    return update_cookbook_invitation(db, invitation, body)
+
+
+@router.delete("/cookbooks/{cookbook_id}/invitations/{invitation_id}", status_code=status.HTTP_204_NO_CONTENT)
+def cancel_invitation(
+    cookbook_id: UUID,
+    invitation_id: UUID,
+    db: Session = Depends(get_db),
+    current_user_id: str = Depends(get_user_id),
+):
+    _ = _get_cookbook_or_404(db, cookbook_id)
+    _require_owner(db, cookbook_id, current_user_id)
+    invitation = _get_and_validate_invitation(db, cookbook_id, invitation_id)
+    delete_cookbook_invitation(db, invitation)

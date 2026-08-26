@@ -4,9 +4,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './styles/theme.css';
 import './styles/globals.css';
 import './styles/animations.css';
+import './styles/responsive.css';
 import AppLayout from './components/layout/AppLayout.jsx';
 import Home from './pages/Home.jsx';
-import UiKitDemo from './pages/UiKitDemo.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import CookbooksPage from './pages/Cookbooks.jsx';
@@ -29,7 +29,6 @@ createRoot(document.getElementById('root')).render(
       <Routes>
         <Route path="/" element={<AppLayout />}>
           <Route index element={<Home />} />
-          <Route path="uikit" element={<UiKitDemo />} />
           <Route path="cookbooks" element={<CookbooksPage />} />
           <Route path="cookbooks/:cookbookId" element={<CookbookDetailPage />} />
           <Route path="recipes/new" element={<RecipeCreate />} />

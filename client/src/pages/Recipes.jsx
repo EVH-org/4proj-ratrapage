@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { apiFetch, getToken } from '../lib/api';
-import { GRADS, grad } from '../lib/shared';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
-import Tag from '../components/ui/Tag';
+import RecipeCard from '../components/recipes/RecipeCard';
 
 export default function Recipes() {
   const [data, setData] = useState([]);
@@ -114,47 +113,7 @@ export default function Recipes() {
                   {section.recipes.map((recipe) => (
                     <div key={recipe.id} style={{ flex: '0 0 280px', scrollSnapAlign: 'start' }}>
                       <Link to={`/recipes/${recipe.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                        <Card className="ui-card-interactive" style={{ textAlign: 'left', cursor: 'pointer' }}>
-                          <div
-                            className="recipe-card-img-wrapper"
-                            style={{
-                              background: recipe.image_url
-                                ? `url(${recipe.image_url}) center/cover no-repeat`
-                                : grad(recipe.id),
-                            }}
-                          >
-                            {recipe.image_url && (
-                              <img
-                                src={recipe.image_url}
-                                alt={recipe.title}
-                                className="recipe-card-img"
-                                style={{ opacity: 0 }}
-                              />
-                            )}
-                          </div>
-                          <div style={{ padding: 'var(--space-lg)' }}>
-                            <h3 style={{ color: 'var(--color-text-primary)', marginBottom: '8px' }}>
-                              {recipe.title}
-                            </h3>
-                            {recipe.description && (
-                              <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)', marginBottom: '12px' }}>
-                                {recipe.description}
-                              </p>
-                            )}
-                            <div className="recipe-card-meta">
-                              {recipe.prep_time_minutes && <span>{recipe.prep_time_minutes} min prep.</span>}
-                              {recipe.cook_time_minutes && <span>{recipe.cook_time_minutes} min cuisson</span>}
-                              {recipe.servings && <span>{recipe.servings} pers.</span>}
-                            </div>
-                            {recipe.tags && recipe.tags.length > 0 && (
-                              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: '8px' }}>
-                                {recipe.tags.map((tag) => (
-                                  <Tag key={tag.id} variant="primary">{tag.label}</Tag>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        </Card>
+                        <RecipeCard recipe={recipe} onClick={() => {}} />
                       </Link>
                     </div>
                   ))}

@@ -10,8 +10,6 @@ from typing import Sequence, Union
 from alembic import op
 import sqlalchemy as sa
 
-
-# revision identifiers, used by Alembic.
 revision: str = '0003'
 down_revision: Union[str, Sequence[str], None] = '0002'
 branch_labels: Union[str, Sequence[str], None] = None
@@ -51,11 +49,9 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('cookbook_id', 'user_id')
     )
-    # ### end Alembic commands ###
 
 
 def downgrade() -> None:
     op.drop_table('cookbook_members')
     op.drop_table('cookbook_invitations')
     op.drop_table('cookbooks')
-    # ### end Alembic commands ###

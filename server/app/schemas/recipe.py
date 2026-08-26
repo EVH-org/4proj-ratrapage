@@ -2,7 +2,7 @@ import re
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 _TAG_RE = re.compile(r"^[a-zA-Z0-9À-ÿ\- ]{2,30}$")
 _MAX_TAGS = 10
@@ -28,13 +28,12 @@ class RecipeStepCreate(BaseModel):
 
 
 class RecipeStepRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
     recipe_id: UUID
     step_order: int
     instruction: str
-
-    class Config:
-        from_attributes = True
 
 
 class RecipeIngredientCreate(BaseModel):
@@ -46,6 +45,8 @@ class RecipeIngredientCreate(BaseModel):
 
 
 class RecipeIngredientRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
     recipe_id: UUID
     line_order: int
@@ -53,9 +54,6 @@ class RecipeIngredientRead(BaseModel):
     quantity: float | None
     unit: str | None
     note: str | None
-
-    class Config:
-        from_attributes = True
 
 
 class ImagePresignRequest(BaseModel):
@@ -74,12 +72,11 @@ class ImageUrlResponse(BaseModel):
 
 
 class TagRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
     label: str
     created_at: datetime
-
-    class Config:
-        from_attributes = True
 
 
 class RecipeCreate(BaseModel):
@@ -124,6 +121,8 @@ class RecipeUpdate(BaseModel):
 
 
 class RecipeRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
     scope_type: str
     visibility: str
@@ -145,11 +144,10 @@ class RecipeRead(BaseModel):
     tags: list[TagRead] = []
     is_favorite: bool = False
 
-    class Config:
-        from_attributes = True
-
 
 class RecipeExport(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     title: str = Field(..., max_length=255)
     description: str | None = Field(None, max_length=1000)
     prep_time_minutes: int | None = Field(None, ge=0)
@@ -158,6 +156,3 @@ class RecipeExport(BaseModel):
     source_url: str | None = Field(None, max_length=500)
     ingredients: list[RecipeIngredientRead] = []
     steps: list[RecipeStepRead] = []
-
-    class Config:
-        from_attributes = True

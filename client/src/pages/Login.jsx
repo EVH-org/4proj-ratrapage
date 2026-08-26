@@ -78,7 +78,7 @@ export default function Login() {
           <ChefHat size={48} color="var(--color-primary)" className="animate-bounce-in" style={{ marginBottom: '8px' }} />
           <h2 style={{ color: 'var(--color-primary)', marginTop: '0.5rem' }}>Connexion</h2>
           <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-sm)' }}>
-            Heureux de vous revoir ! {window.location.href.includes('autologin') ? " (autologin détecté)" : " (pas d'autologin)"}
+            Bienvenue sur SUPMEAL
           </p>
         </div>
 

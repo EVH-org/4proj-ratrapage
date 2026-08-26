@@ -10,6 +10,7 @@ from app.schemas.cookbook import (
     CookbookCreate,
     CookbookUpdate,
     CookbookInvitationCreate,
+    CookbookInvitationUpdate,
 )
 
 
@@ -43,7 +44,6 @@ def create_cookbook(
     db.commit()
     db.refresh(cookbook)
 
-    # Automatically add the creator as member with role 'owner'
     member = CookbookMember(
         cookbook_id=cookbook.id,
         user_id=owner_user_id,
@@ -123,7 +123,6 @@ def delete_cookbook_member(db: Session, member: CookbookMember) -> None:
 def add_cookbook_member(
     db: Session, cookbook_id: UUID, user_id: UUID, role: str
 ) -> CookbookMember:
-    # First check if already a member, if so, update role
     member = get_cookbook_member(db, cookbook_id, user_id)
     if member:
         member.role = role
@@ -184,3 +183,31 @@ def update_cookbook_invitation_status(
     db.commit()
     db.refresh(invitation)
     return invitation
+
+
+def get_cookbook_invitation_by_id(
+    db: Session, invitation_id: UUID
+) -> CookbookInvitation | None:
+    return (
+        db.query(CookbookInvitation)
+        .filter(CookbookInvitation.id == invitation_id)
+        .first()
+    )
+
+
+def update_cookbook_invitation(
+    db: Session, invitation: CookbookInvitation, data: CookbookInvitationUpdate
+) -> CookbookInvitation:
+    if data.role_assigned is not None:
+        invitation.role_assigned = data.role_assigned
+    if data.expires_at is not None:
+        invitation.expires_at = data.expires_at
+    db.add(invitation)
+    db.commit()
+    db.refresh(invitation)
+    return invitation
+
+
+def delete_cookbook_invitation(db: Session, invitation: CookbookInvitation) -> None:
+    db.delete(invitation)
+    db.commit()

@@ -10,7 +10,6 @@ export const GRADS = [
 ];
 
 export function grad(id) {
-  // djb2 — ça marche bien pour distribuer les couleurs
   let h = 0;
   const s = String(id ?? '');
   for (let i = 0; i < s.length; i++) h = s.charCodeAt(i) + ((h << 5) - h);

@@ -5,10 +5,8 @@ from sqlalchemy import pool
 
 from alembic import context
 
-# Objet de config Alembic.
 config = context.config
 
-# Loggers simples via le fichier ini.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
@@ -19,11 +17,8 @@ from app import models
 settings = get_settings()
 target_metadata = Base.metadata
 
-# D'autres options sont possibles si besoin.
-
 
 def run_migrations_offline() -> None:
-    """Mode offline : on passe juste l'URL."""
     url = settings.database_url
     context.configure(
         url=url,
@@ -37,7 +32,6 @@ def run_migrations_offline() -> None:
 
 
 def run_migrations_online() -> None:
-    """Mode online : on ouvre une connexion."""
     configuration = config.get_section(config.config_ini_section, {})
     configuration["sqlalchemy.url"] = settings.database_url
     connectable = engine_from_config(

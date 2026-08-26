@@ -1,17 +1,16 @@
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class UserPreferenceRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     user_id: UUID
     default_servings: int | None
     diets: list[str] | None
     allergies: list[str] | None
     favorite_cuisines: list[str] | None
-
-    class Config:
-        from_attributes = True
 
 
 class UserPreferenceUpdate(BaseModel):

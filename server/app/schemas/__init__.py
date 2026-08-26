@@ -8,7 +8,9 @@ from app.schemas.cookbook import (
     CookbookMemberRead,
     CookbookMemberUpdate,
     CookbookInvitationCreate,
+    CookbookInvitationUpdate,
     CookbookInvitationRead,
+    CookbookInvitationPublicInfo,
 )
 from app.schemas.recipe import (
     RecipeStepCreate,
@@ -37,7 +39,9 @@ __all__ = [
     "CookbookMemberRead",
     "CookbookMemberUpdate",
     "CookbookInvitationCreate",
+    "CookbookInvitationUpdate",
     "CookbookInvitationRead",
+    "CookbookInvitationPublicInfo",
     "RecipeStepCreate",
     "RecipeStepRead",
     "RecipeIngredientCreate",

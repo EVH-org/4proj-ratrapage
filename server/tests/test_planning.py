@@ -1,5 +1,4 @@
-"""Tests d'integration : planning de repas et liste de courses."""
-from datetime import date, timedelta
+from datetime import date
 from uuid import uuid4
 
 from tests.conftest import create_test_user, create_test_recipe

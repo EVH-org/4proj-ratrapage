@@ -10,8 +10,6 @@ from typing import Sequence, Union
 from alembic import op
 import sqlalchemy as sa
 
-
-# revision identifiers, used by Alembic.
 revision: str = '0005_add_tags_and_favorites'
 down_revision: Union[str, Sequence[str], None] = '1201debb1295'
 branch_labels: Union[str, Sequence[str], None] = None
@@ -19,8 +17,6 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    """Upgrade schema."""
-    # Create tags table
     op.create_table(
         'tags',
         sa.Column('id', sa.UUID(), nullable=False),
@@ -30,7 +26,6 @@ def upgrade() -> None:
         sa.UniqueConstraint('label')
     )
 
-    # Create recipe_tags association table
     op.create_table(
         'recipe_tags',
         sa.Column('recipe_id', sa.UUID(), nullable=False),
@@ -41,7 +36,6 @@ def upgrade() -> None:
         sa.UniqueConstraint('recipe_id', 'tag_id', name='uq_recipe_tags_recipe_tag')
     )
 
-    # Create recipe_favorites table
     op.create_table(
         'recipe_favorites',
         sa.Column('user_id', sa.UUID(), nullable=False),
@@ -55,7 +49,6 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    """Downgrade schema."""
     op.drop_table('recipe_favorites')
     op.drop_table('recipe_tags')
     op.drop_table('tags')
