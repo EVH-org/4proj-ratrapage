@@ -6,7 +6,7 @@ from sqlalchemy.pool import StaticPool
 from app.db.base import Base
 from app.db.session import get_db
 from app.main import app
-from app.security import create_access_token
+from app.security import create_access_token, hash_password
 
 TEST_DATABASE_URL = "sqlite:///:memory:"
 
@@ -46,21 +46,15 @@ def client(db_session):
 
 @pytest.fixture
 def user_headers():
-    """Cree deux utilisateurs et retourne leurs headers auth."""
     def _make(email, password="secret"):
-        from app.models.user import User
-        from app.models.user_preference import UserPreference
-        from app.db.session import SessionLocal
         import uuid
-
         token = create_access_token(str(uuid.uuid4()))
         return {"Authorization": f"Bearer {token}"}
 
     return _make
 
 
-def create_test_user(db_session, email, display_name="Test"):
-    """Cree un user directement en base et retourne (user, token)."""
+def create_test_user(db_session, email, display_name="Test", password="password"):
     import uuid
     from app.models.user import User
     from app.models.user_preference import UserPreference
@@ -69,7 +63,7 @@ def create_test_user(db_session, email, display_name="Test"):
     user = User(
         id=user_id,
         email=email,
-        password_hash="password",
+        password_hash=hash_password(password),
         display_name=display_name,
     )
     db_session.add(user)
@@ -83,9 +77,8 @@ def create_test_user(db_session, email, display_name="Test"):
 
 
 def create_test_recipe(db_session, owner_user_id, title, visibility="public", **kwargs):
-    """Cree une recette personnelle directement en base et retourne la recette."""
     import uuid
-    from app.models.recipe import Recipe, RecipeStep, RecipeIngredient
+    from app.models.recipe import Recipe
 
     recipe_id = uuid.uuid4()
     recipe = Recipe(

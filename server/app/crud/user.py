@@ -6,6 +6,7 @@ from app.models.user import User
 from app.models.user_preference import UserPreference
 from app.schemas.user import UserCreate, UserUpdate
 from app.schemas.user_preference import UserPreferenceUpdate
+from app.security import hash_password
 
 
 def get_user_by_id(db: Session, user_id: UUID) -> User | None:
@@ -29,7 +30,7 @@ def list_users(db: Session, skip: int = 0, limit: int = 100) -> list[User]:
 def create_user(db: Session, data: UserCreate) -> User:
     user = User(
         email=data.email,
-        password_hash=data.password,
+        password_hash=hash_password(data.password),
         display_name=data.display_name,
     )
     db.add(user)
@@ -44,8 +45,8 @@ def create_user(db: Session, data: UserCreate) -> User:
 
 
 def update_user(db: Session, user: User, data: UserUpdate) -> User:
-    if data.password_hash is not None:
-        user.password_hash = data.password_hash
+    if data.password is not None:
+        user.password_hash = hash_password(data.password)
     if data.display_name is not None:
         user.display_name = data.display_name
 

@@ -23,5 +23,9 @@ build/
 .DS_Store
 Thumbs.db
 
+# --- Outils locaux ---
+.kilo/
+kilo.jsonc
+
 # --- Docker ---
 *.log

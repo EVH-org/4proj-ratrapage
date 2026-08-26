@@ -1,4 +1,3 @@
-"""Script de seed : populate la base avec des donnees realistes."""
 import uuid
 from datetime import date
 
@@ -8,6 +7,7 @@ from app.models.user_preference import UserPreference
 from app.models.cookbook import Cookbook, CookbookMember
 from app.models.recipe import Recipe, RecipeStep, RecipeIngredient, RecipeTag, Tag
 from app.crud.recipe import _process_recipe_tags
+from app.security import hash_password
 
 
 def _add_recipe(db, scope, visibility, owner_id, cookbook_id, creator_id,
@@ -43,20 +43,18 @@ def seed():
     try:
         existing = db.query(User).filter(User.email == "testchef@cuisine.fr").first()
         if existing:
-            print("La base semble deja peuplee (testchef@cuisine.fr existe). Seed annule.")
+            print("Base deja initialisee.")
             return
 
-        print("Creation des utilisateurs...")
-        chef = User(id=uuid.uuid4(), email="testchef@cuisine.fr", password_hash="chefpassword", display_name="Chef Martin")
-        marie = User(id=uuid.uuid4(), email="marie@cuisine.fr", password_hash="password", display_name="Marie Dupont")
-        paul = User(id=uuid.uuid4(), email="paul@cuisine.fr", password_hash="password", display_name="Paul Durand")
+        chef = User(id=uuid.uuid4(), email="testchef@cuisine.fr", password_hash=hash_password("chefpassword"), display_name="Chef Martin")
+        marie = User(id=uuid.uuid4(), email="marie@cuisine.fr", password_hash=hash_password("password"), display_name="Marie Dupont")
+        paul = User(id=uuid.uuid4(), email="paul@cuisine.fr", password_hash=hash_password("password"), display_name="Paul Durand")
         for u in [chef, marie, paul]:
             db.add(u)
             db.flush()
             db.add(UserPreference(user_id=u.id))
         db.flush()
 
-        print("Creation du cookbook Patisseries & Gourmandises...")
         cb = Cookbook(
             id=uuid.uuid4(),
             owner_user_id=chef.id,
@@ -81,9 +79,6 @@ def seed():
         def recipe_paul(title, desc, prep, cook, servings, steps_ing, tags, visibility="public"):
             return _add_recipe(db, "personal", visibility, paul.id, None, paul.id, title, desc, prep, cook, servings, steps_ing, tags)
 
-        # --- Recettes personnelles de Chef Martin ---
-
-        print("Creation des recettes personnelles...")
         recipe_perso(
             "Tarte aux légumes du soleil",
             "Une tarte salée garnie de légumes méditerranéens, parfaite pour un dîner léger.",
@@ -137,7 +132,6 @@ def seed():
             ["gratin", "pomme de terre", "traditionnel", "gratiné"],
         )
 
-        # Recette privée du chef
         recipe_perso(
             "Salade secrète du chef",
             "Une salade personnelle que le chef garde pour lui.",
@@ -149,9 +143,6 @@ def seed():
             visibility="private",
         )
 
-        # --- Cookbook Pâtisseries & Gourmandises ---
-
-        print("Creation des recettes du cookbook Patisseries...")
         recipe_cookbook(
             "Fondant au chocolat",
             "Un coeur coulant au chocolat noir, dessert incontournable des amateurs de cacao.",
@@ -207,9 +198,6 @@ def seed():
             ["poire", "amande", "dessert", "gâteau"],
         )
 
-        # --- Recettes publiques d'autres utilisateurs ---
-
-        print("Creation des recettes de Marie et Paul...")
         recipe_marie(
             "Boeuf bourguignon",
             "Le grand classique mijoté au vin rouge, comme le faisait ma grand-mère.",
@@ -282,8 +270,6 @@ def seed():
         )
 
         db.commit()
-        print("Seed termine avec succes !")
-
     finally:
         db.close()
 
