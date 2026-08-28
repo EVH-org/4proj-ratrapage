@@ -2,6 +2,9 @@
 
 SUPMEAL est une application web de gestion de recettes de cuisine. Elle permet de créer et partager des recettes, de les regrouper dans des carnets collaboratifs (*cookbooks*) avec gestion de rôles, de planifier ses repas sur un calendrier hebdomadaire et d'en générer automatiquement la liste de courses.
 
+- **Dépôt** : [github.com/EVH-org/4proj-ratrapage](https://github.com/EVH-org/4proj-ratrapage)
+- **Auteur** : Eliot Varigault-Halope
+
 **Sommaire**
 
 1. [Périmètre fonctionnel](#1-périmètre-fonctionnel)
